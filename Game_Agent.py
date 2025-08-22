@@ -205,6 +205,16 @@ class AgenticPlanner:
             "dependencies": [s["id"] for s in steps[:-1]]
         })
         
+        # Step 5: Enhanced monitoring and documentation
+        steps.append({
+            "id": "enhancement",
+            "type": "enhance_monitoring",
+            "description": "Enhance monitoring capabilities and update documentation",
+            "priority": "LOW",
+            "estimated_time": "10-20 minutes",
+            "dependencies": [s["id"] for s in steps]
+        })
+        
         goal = f"Resolve {len(critical_issues)} critical, {len(medium_issues)} medium, and {len(low_issues)} low priority issues"
         
         return AgentPlan(goal=goal, steps=steps)
@@ -406,11 +416,17 @@ st.markdown("""
         backdrop-filter: blur(15px);
         border: 1px solid rgba(226, 232, 240, 0.8);
         border-radius: 20px;
-        padding: 2rem;
+        padding: 1.5rem;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
-        height: 100%;
+        height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        box-sizing: border-box;
     }
     
     .metric-card::before {
@@ -432,10 +448,23 @@ st.markdown("""
     }
     
     .metric-card h3 {
-        margin: 0 0 0.8rem 0;
+        margin: 0;
         font-size: 2.8rem;
         font-weight: 700;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+        margin-bottom: 0.8rem;
+        font-variant-numeric: tabular-nums;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        transform: translateY(-15px);
+        position: relative;
+        width: 100%;
+        text-align: center;
     }
     
     .metric-card .metric-title {
@@ -693,9 +722,9 @@ The rest of the app's features will still work without AI.
         if AI_TYPE == "ollama":
             data = {
                 "model": "llama3.2:3b", "prompt": prompt, "stream": False,
-                "options": {"temperature": 0.5, "num_predict": 400}
+                "options": {"temperature": 0.5, "num_predict": 1500}
             }
-            response = requests.post("http://localhost:11434/api/generate", json=data, timeout=30)
+            response = requests.post("http://localhost:11434/api/generate", json=data, timeout=60)
             response.raise_for_status()
             return response.json()["response"]
         
@@ -705,7 +734,7 @@ The rest of the app's features will still work without AI.
             response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=400, temperature=0.5
+                max_tokens=1500, temperature=0.5
             )
             return response.choices[0].message.content
 
@@ -793,7 +822,7 @@ def run_proactive_analysis(grouped_data):
     2. **Top Priority Issue**: Most critical issue with autonomous impact assessment
     3. **Recommended First Action**: Immediate autonomous action I will take
     4. **Autonomous Plan**: I've created a {len(resolution_plan.steps)}-step resolution plan
-    5. **Self-Learning**: I'm continuously learning from patterns and will adapt my approach
+    5. **Self-Learning**: I continuously learn from patterns in log files, updating my approach to address emerging issues and improving overall system stability for better performance optimization.
 
     **My Autonomous Capabilities:**
     - 🎯 Multi-step planning and execution
@@ -1719,7 +1748,7 @@ def main():
                 avatar = "🕵️‍♂️" if message["role"] == "assistant" else "👨‍💻"
                 with st.chat_message(message["role"], avatar=avatar):
                     if message["role"] == "assistant":
-                        # Enhanced assistant message styling
+                        # Enhanced assistant message with proper container
                         if i == 0:  # First message is the initial briefing
                             st.markdown("""
                             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
@@ -1735,27 +1764,47 @@ def main():
                             </div>
                             """, unsafe_allow_html=True)
                         
-                        # Professional content styling
+                        # Professional assistant message box
                         st.markdown(f"""
-                        <div style='background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05)); 
-                                    border: 1px solid rgba(102, 126, 234, 0.15);
+                        <div style='background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08)); 
+                                    border: 1px solid rgba(102, 126, 234, 0.2);
                                     padding: 1.5rem; border-radius: 15px; 
                                     border-left: 4px solid #667eea; margin: 0.5rem 0; 
                                     backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.05);
                                     font-family: "Inter", sans-serif; line-height: 1.6; color: #2d3748;'>
-                            {html.escape(message["content"])}
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <div style="background: linear-gradient(135deg, #667eea, #764ba2); 
+                                           width: 32px; height: 32px; border-radius: 50%; 
+                                           display: flex; align-items: center; justify-content: center;
+                                           flex-shrink: 0; margin-top: 2px;">
+                                    <span style="font-size: 14px;">🕵️‍♂️</span>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    {message["content"]}
+                                </div>
+                            </div>
                         </div>
                         """, unsafe_allow_html=True)
                     else:
-                        # Enhanced user message styling  
+                        # Enhanced user message box
                         st.markdown(f"""
                         <div style='background: rgba(248, 250, 252, 0.95); 
                                     border: 1px solid rgba(226, 232, 240, 0.8);
-                                    padding: 1rem; border-radius: 12px; 
+                                    padding: 1.2rem; border-radius: 12px; 
                                     border-left: 4px solid #64748b; margin: 0.5rem 0; 
                                     backdrop-filter: blur(5px); font-family: "Inter", sans-serif;
-                                    color: #374151; line-height: 1.5;'>
-                            {html.escape(message["content"])}
+                                    color: #374151; line-height: 1.5; box-shadow: 0 2px 8px rgba(0,0,0,0.04);'>
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <div style="background: linear-gradient(135deg, #64748b, #475569); 
+                                           width: 32px; height: 32px; border-radius: 50%; 
+                                           display: flex; align-items: center; justify-content: center;
+                                           flex-shrink: 0; margin-top: 2px;">
+                                    <span style="font-size: 14px;">👨‍💻</span>
+                                </div>
+                                <div style="flex: 1; min-width: 0; padding-top: 2px;">
+                                    {message["content"]}
+                                </div>
+                            </div>
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -1973,24 +2022,52 @@ def main():
             # Memory and learning section
             agent_memory = st.session_state.get('agent_memory')
             if agent_memory:
-                st.markdown("### 🧠 Agent Memory & Learning")
+                st.markdown("### 🧠 How This AI Assistant is Learning to Help You Better")
+                
+                st.markdown("""
+                **What you see below:** This shows how the AI is getting smarter about helping you with game development issues. 
+                Think of it like a personal assistant that remembers what worked well before.
+                """)
                 
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.metric("Conversations", len(agent_memory.conversations))
-                    st.metric("Learned Patterns", len(agent_memory.learned_patterns))
+                    st.metric("Total Conversations", len(agent_memory.conversations))
+                    st.caption("💬 How many times you've asked me questions")
+                    
+                    st.metric("Things I've Learned", len(agent_memory.learned_patterns))
+                    st.caption("🎯 Question patterns I now recognize and can answer faster")
                 with col2:
-                    st.metric("Success Cases", len(agent_memory.success_feedback))
-                    st.metric("Failed Attempts", len(agent_memory.failed_attempts))
+                    st.metric("Times I Helped Successfully", len(agent_memory.success_feedback))
+                    st.caption("✅ Solutions that worked well for you")
+                    
+                    st.metric("Times I Need to Improve", len(agent_memory.failed_attempts))
+                    st.caption("📚 Mistakes I'm learning from to do better next time")
                 
                 if agent_memory.learned_patterns:
-                    with st.expander("🔍 View Learned Patterns"):
+                    with st.expander("🔍 AI Learning Insights - What I've Learned From You"):
+                        st.markdown("""
+                        💡 **What this means:** The AI agent learns from your questions and remembers successful problem-solving approaches. 
+                        This helps it give you better answers over time by recognizing similar questions and applying proven solutions.
+                        """)
+                        st.markdown("---")
+                        
                         for i, pattern in enumerate(agent_memory.learned_patterns[:5]):
-                            st.markdown(f"**Pattern {i+1}:** {', '.join(pattern.get('keywords', []))}")
-                            st.markdown(f"Used {pattern.get('usage_count', 0)} times")
+                            st.markdown(f"### 🎯 Learning Pattern {i+1}")
+                            
+                            keywords = pattern.get('keywords', [])
+                            if keywords:
+                                st.markdown(f"**Common question themes:** {', '.join(keywords)}")
+                            
+                            usage_count = pattern.get('usage_count', 0)
+                            st.markdown(f"**How often I've seen this:** {usage_count} time{'s' if usage_count != 1 else ''}")
+                            
                             if pattern.get('successful_approach'):
-                                st.markdown(f"*Successful approach: {pattern['successful_approach']}*")
-                            st.divider()
+                                approach = pattern['successful_approach'].replace('_', ' ').title()
+                                st.markdown(f"**Best solution method:** {approach}")
+                                st.markdown("✅ *This approach worked well, so I'll use it again for similar questions*")
+                            
+                            if i < len(agent_memory.learned_patterns[:5]) - 1:
+                                st.divider()
         
     elif uploaded_file and st.session_state.session_id and log_data.empty:
         # Only show success message when a file was actually uploaded and processed with no issues
