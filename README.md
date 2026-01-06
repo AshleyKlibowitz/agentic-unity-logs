@@ -48,55 +48,54 @@ The application is structured into three distinct layers:
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
-* Python 3.8+
+* **Python 3.8+**
 * [Ollama](https://ollama.ai/) (Recommended for local use) **OR** an OpenAI API Key.
 
 ### 1. Clone the Repository
-git clone [https://github.com/AshleyKlibowitz/agentic-log-analyzer.git](https://github.com/AshleyKlibowitz/agentic-log-analyzer.git)
-cd agentic-log-analyzer
 
-2. Install Dependencies
+git clone https://github.com/AshleyKlibowitz/agentic-log-analyzer.git cd agentic-log-analyzer
+
+### 2. Install Dependencies
+
 pip install streamlit pandas requests openai
 
-4. AI Configuration
+### 3. AI Configuration
 
-Option A: Local AI (Free & Private) - Recommended
+**Option A: Local AI (Free & Private) - Recommended**
+* Install Ollama.
+* Pull the model used in the code:
+    ```
+    ollama pull llama3.2:3b
+    ```
+* Ensure Ollama is running (`ollama serve`). The app detects it automatically.
 
-Install Ollama.
+**Option B: OpenAI (Cloud)**
+* Create a `.streamlit/secrets.toml` file in the project root.
+* Add your API key:
+    ```toml
+    OPENAI_API_KEY = "sk-your-api-key-here"
+    ```
 
-Pull the model used in the code:
+---
 
-ollama pull llama3.2:3b
-Ensure Ollama is running (ollama serve). The app detects it automatically.
+## 💻 Usage
 
-Option B: OpenAI (Cloud)
-
-Create a .streamlit/secrets.toml file in the project root.
-
-Add your API key:
-
-Ini, TOML
-OPENAI_API_KEY = "sk-your-api-key-here"
-💻 Usage
-
-Run the App:
+**Run the App:**
 
 streamlit run app.py
-Upload Logs: Drag and drop a .log or .txt file.
 
-Autonomous Mode: Click the "🚀 Autonomous Mode" tab to watch the agent execute its resolution plan step-by-step.
+* **Upload Logs:** Drag and drop a `.log` or `.txt` file.
+* **Autonomous Mode:** Click the "🚀 Autonomous Mode" tab to watch the agent execute its resolution plan step-by-step.
+* **Download Fixes:** After the agent completes its analysis, download the generated C# fix files.
 
-Download Fixes: After the agent completes its analysis, download the generated C# fix files.
+---
 
-🛡️ Supported Issues
+## 🛡️ Supported Issues
+
 The system includes specific logic to detect and fix:
 
-NullReferenceException (Unity/C#)
-
-Buffer Overflows & Network Security Risks
-
-Memory Leaks / Out of Memory Exceptions
-
-JSON Deserialization Errors
-
-Array/List Index Out of Range
+* NullReferenceException (Unity/C#)
+* Buffer Overflows & Network Security Risks
+* Memory Leaks / Out of Memory Exceptions
+* JSON Deserialization Errors
+* Array/List Index Out of Range
