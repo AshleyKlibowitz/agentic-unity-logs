@@ -9,6 +9,8 @@
 
 This is an advanced, **Agentic AI-powered diagnostic tool** designed for game developers. Unlike traditional log parsers, this application utilizes an autonomous agent architecture to not only read logs but to **reason, plan, and execute resolution strategies**.
 
+The underlying NLP pipeline could also be used for scalable conversational analytics, sentiment monitoring in customer support channels, and real-time operational anomaly detection.
+
 The system ingests raw game engine logs (Unity/Unreal/Custom), detects critical patterns (crashes, memory leaks, security risks), and uses a multi-step planning engine to autonomously generate C# code fixes and performance optimizations.
 
 ## 🌟 Key Agentic Features
