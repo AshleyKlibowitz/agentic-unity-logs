@@ -1,4 +1,4 @@
-# 🕵️‍♂️ Agentic AI Game Log Analyzer
+# 🕵️‍♂️ Agentic AI Log Analyzer
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![Streamlit](https://img.shields.io/badge/Framework-Streamlit-ff4b4b)
